@@ -10,7 +10,7 @@ L'objectif de ce projet est de prévoir s'il y aura des précipitations à New D
 * Wind speed (La vitesse du vent)
 
 J'ai fait de l'analyse de données pour comprendre le dataset, l'apprentissage et j'ai enregistré le meilleur modele, vous trouverez toutes 
-ces informations dans ce [notebook]()
+ces informations dans ce [notebook](https://github.com/Anasoubida/Rain_prediction/blob/master/notebook.ipynb)
 
 J'ai crée aussi un api avec Fastapi qui wrap le modèle de ML, je l'ai mis dans un docker container, et j'ai tout déployé dans un EC2 instance sur AWS.
 
@@ -29,19 +29,8 @@ J'ai crée aussi un api avec Fastapi qui wrap le modèle de ML, je l'ai mis dans
 * tempm : temperature en °C.
 * pressurem : pression en hpa.
 * hum : humidité en %
-* rain : precipitations en %
+* rain : precipitations (1=Oui, 0=Non)
 
-**Précipitations en %**
-PP = C x A 
-
-"PP" étant le pourcentage de précipitation.
-"C" la confiance que les météorologues ont sur le fait que la pluie va tomber quelque part sur une région géographique donnée.
-"A" le pourcentage de zone de cette région qui recevra cette pluie si elle tombe
-
-**Exemple:**
-
-Demain il y aura 60% de risque de pluie en Gironde, cela veut dire qu'il y a 100% de chance qu'il pleuve sur 60% du territoire et pas 60% de chance qu'il pleuve sur l'ensemble de ce même territoire.
-En gros, s'il pleut, ça sera sur 60% de la région.
 
 **Difference entre frog (brouillard), mist (la brume), haze (la brume sèche)**
 
@@ -62,14 +51,14 @@ En gros, s'il pleut, ça sera sur 60% de la région.
 
 ## Presentation des scripts
 
-Vous trouverez dans [notebook]() la partie EDA, training et saving du modele de ML. 
+Vous trouverez dans [notebook](https://github.com/Anasoubida/Rain_prediction/blob/master/notebook.ipynb) la partie EDA, training et saving du modele de ML. 
 
-Le script [rain_app.py]() contient le code de l'api. Cet API est composé de trois endpoints : 
+Le script [rain_app.py](https://github.com/Anasoubida/Rain_prediction/blob/master/rain_app.py) contient le code de l'api. Cet API est composé de trois endpoints : 
 * predict_rain : qui permet de faire de la prévision des précipitations en renseignant les diffirents champs nécessaires (Cet endpoint ne pourra pas recevoir de post requests ayant un body)
 * predict_rain_body : permet de recevoir un post request à partir d'un script python comme [send_request.py]()
 * predict_rain_file : permet de recevoir un fichier csv et va retourner les prévisions en format json
 
-[send_request.py]() permet d'envoyer des requêtes à l'API.
+[send_request.py](https://github.com/Anasoubida/Rain_prediction/blob/master/send_request.py) permet d'envoyer des requêtes à l'API.
 
 ## Faire tourner l'API en local
 
@@ -91,7 +80,7 @@ uvicorn rain_app:app --reload
 
 Et après il va falloir taper cette adresse : http://127.0.0.1:8000/docs
 
-Vous pouvez aussi envoyer des requetes à l'aide du script [send_request.py]()
+Vous pouvez aussi envoyer des requetes à l'aide du script [send_request.py](https://github.com/Anasoubida/Rain_prediction/blob/master/send_request.py)
 
 ## Deployer avec docker
 
@@ -109,10 +98,75 @@ docker run -p 8000:8000 rain_app
 
 Et après il va falloir taper cette adresse : http://localhost:8000/docs
 
-Vous pouvez aussi envoyer des requetes à l'aide du script [send_request.py]()
+Vous pouvez aussi envoyer des requetes à l'aide du script [send_request.py](https://github.com/Anasoubida/Rain_prediction/blob/master/send_request.py)
 
+### 3) deploiement avec une instance ec2 sur aws
 
+#### 1) il faudra lancer une instance ec2 
 
-cd C:\CDI\bioceanor\test_technique\test_technique_anas_oubida
+*Dans ce tuto j'utilise une instance avec ubuntu*
+* Pensez bien à créer la paire de clés pour pouvoir se connecer en ssh au serveur (de préférence en format .ppk)
+
+#### 2) Installer putty pour se connecter en ssh
+
+#### 3) se connecter à ec2 instance avec putty
+
+* Ouvrir putty et rensigner le host name (il s'agit de l'Adresse IPv4 publique)
+* Uploader la pari key dans putty (aller sur ssh ==> Auth ==> Credentials)
+* Allez dans putty sur connection ==> data ==> rensigner Auto-login username
+
+#### 4) Setup l'environnement sur ubuntu
+
+```bash
+sudo apt-get update
+```
+
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+```bash
+apt-cache madison docker-ce
+```
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+```bash
+sudo apt install docker.io
+```
+```bash
+sudo usermod -aG docker <username>
+```
+
+Se deconnecter et puis se reconnecter à l'ec2 instance
+
+#### 6) Installation/setup de nginx
+
+* Pour installer nginx: 
+
+sudo apt install nginx
+
+* Après il faudra créer un fichier pour le setup de nginx
+
+sudo vi /etc/nginx/sites-enabled/fastapi-demo
+
+La commande ci-dessus va créer un fichier fastapi-demo dans lequel on va coller cela (en remplaçant PUBLIC_IP par l'Adresse IPv4 publique) : 
+
+server {
+    listen 80;
+    server_name <PUBLIC_IP>;
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+    }
+}
+
+#### 5) Build and run the docker container
+
 docker build -t rain_app .
 docker run -p 8000:8000 rain_app
+
+
+#### 6) Accéder à l'API 
+
+On pourra accéder à l'API en copiant et collant l'Adresse IPv4 publique de l'instance ec2 en collant à coté le port 8000, exemple :
+http://0.0.0.0:8000
