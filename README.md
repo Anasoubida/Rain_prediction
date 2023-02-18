@@ -154,6 +154,12 @@ sudo apt install nginx
 sudo vi /etc/nginx/sites-enabled/fastapi-demo
 ```
 
+* Restart nginx
+
+```bash
+sudo service nginx restart 
+```
+
 La commande ci-dessus va créer un fichier fastapi-demo dans lequel on va coller cela (en remplaçant PUBLIC_IP par l'Adresse IPv4 publique) : 
 
 ```bash
