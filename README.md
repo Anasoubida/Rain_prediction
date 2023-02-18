@@ -144,11 +144,15 @@ Se deconnecter et puis se reconnecter à l'ec2 instance
 
 * Pour installer nginx: 
 
+```bash
 sudo apt install nginx
+```
 
 * Après il faudra créer un fichier pour le setup de nginx
 
+```bash
 sudo vi /etc/nginx/sites-enabled/fastapi-demo
+```
 
 La commande ci-dessus va créer un fichier fastapi-demo dans lequel on va coller cela (en remplaçant PUBLIC_IP par l'Adresse IPv4 publique) : 
 
