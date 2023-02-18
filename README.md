@@ -156,6 +156,7 @@ sudo vi /etc/nginx/sites-enabled/fastapi-demo
 
 La commande ci-dessus va créer un fichier fastapi-demo dans lequel on va coller cela (en remplaçant PUBLIC_IP par l'Adresse IPv4 publique) : 
 
+```bash
 server {
     listen 80;
     server_name <PUBLIC_IP>;
@@ -163,12 +164,17 @@ server {
         proxy_pass http://127.0.0.1:8000;
     }
 }
+```
 
 #### 5) Build and run the docker container
 
+```bash
 docker build -t rain_app .
-docker run -p 8000:8000 rain_app
+```
 
+```bash
+docker run -p 8000:8000 rain_app
+```
 
 #### 6) Accéder à l'API 
 
