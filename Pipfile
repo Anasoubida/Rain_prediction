@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "*"
+pandas = "*"
+seaborn = "*"
+scikit-learn = "*"
+plotly = "*"
+xgboost = "*"
+fastapi = "*"
+uvicorn = "*"
+pydantic = "*"
+python-multipart = "*"
+imblearn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
