@@ -142,22 +142,16 @@ Se deconnecter et puis se reconnecter à l'ec2 instance
 
 #### 6) Installation/setup de nginx
 
-* Pour installer nginx: 
+*1) Pour installer nginx: 
 
 ```bash
 sudo apt install nginx
 ```
 
-* Après il faudra créer un fichier pour le setup de nginx
+*2) Après il faudra créer un fichier pour le setup de nginx
 
 ```bash
 sudo vi /etc/nginx/sites-enabled/fastapi-demo
-```
-
-* Restart nginx
-
-```bash
-sudo service nginx restart 
 ```
 
 La commande ci-dessus va créer un fichier fastapi-demo dans lequel on va coller cela (en remplaçant PUBLIC_IP par l'Adresse IPv4 publique) : 
@@ -170,6 +164,12 @@ server {
         proxy_pass http://127.0.0.1:8000;
     }
 }
+```
+
+*3) Restart nginx
+
+```bash
+sudo service nginx restart 
 ```
 
 #### 5) Build and run the docker container
@@ -187,6 +187,7 @@ docker run -p 8000:8000 rain_app
 On pourra accéder à l'API en copiant et collant l'Adresse IPv4 publique de l'instance ec2 en collant à coté le port 8000, exemple :
 http://0.0.0.0:8000
 
+#### Relance de l'instance EC2:
 
 * NB : à chaque fois qu'on relance une instance ec2, il faudra lancer cette commande :
 
@@ -194,6 +195,6 @@ http://0.0.0.0:8000
 sudo systemctl restart docker.socket docker.service
 ```
 
-Et puis changer l'IP adresse dans le fichier de config de nginx
+Et puis changer l'IP adresse dans le fichier de config de nginx, et redemarer nginx (cf. point 6).
 
 Sinon Docker aura du mal à lancer l'API
