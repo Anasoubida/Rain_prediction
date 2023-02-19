@@ -186,3 +186,12 @@ docker run -p 8000:8000 rain_app
 
 On pourra accéder à l'API en copiant et collant l'Adresse IPv4 publique de l'instance ec2 en collant à coté le port 8000, exemple :
 http://0.0.0.0:8000
+
+
+* NB : à chaque fois qu'on relance une instance ec2, il faudra lancer cette commande :
+
+```bash
+sudo systemctl restart docker.socket docker.service
+```
+
+Sinon Docker aura du mal à lancer l'API
