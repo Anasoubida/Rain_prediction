@@ -194,4 +194,6 @@ http://0.0.0.0:8000
 sudo systemctl restart docker.socket docker.service
 ```
 
+Et puis changer l'IP adresse dans le fichier de config de nginx
+
 Sinon Docker aura du mal à lancer l'API
